@@ -3,11 +3,13 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Cards from './../../../objects/cards';
-
-
+import { useNavigate } from 'react-router-dom';
+import { apiConst } from '../../../constants/api.constants';
 
 
 function FixedNav() {
+
+    const navigate = useNavigate();
     const [scrolled, setScrolled] = useState(false);
     useEffect(() => {
         const handleScroll = () => {
@@ -55,6 +57,12 @@ function FixedNav() {
         if (amenitiesSection) {
             amenitiesSection.scrollIntoView({ behavior: 'smooth' });
         }
+    };
+
+
+    const payment = (id) => {
+        console.log("iddd", id)
+        navigate(apiConst.payment.replace(':id', id));
     };
 
     if (!card) return <div>Loading...</div>;

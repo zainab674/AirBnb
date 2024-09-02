@@ -11,10 +11,11 @@ import {
   PublicRoutes,
   UnAuthorizedWrapper,
 } from './routes';
+import { CardDetail, HomePage, HostLanding } from './pages';
 
 function App() {
-  let token = localStorage.getItem('token');
-
+  // let token = localStorage.getItem('token');
+  let token;
   function renderRoutes() {
     if (token) {
       return (
@@ -22,8 +23,8 @@ function App() {
           <Route path='*' element={<Navigate to='/' />} />
 
           {PrivateRoutes.map(({ path, element, key }) => (
-            <Route key={key} exact path={path} element={<AuthorizeWrapper />}>
-              <Route key={key + 1} exact path={path} element={element} />
+            <Route key={key} path={path} element={<AuthorizeWrapper />}>
+              <Route key={key + 1} path={path} element={element} />
             </Route>
           ))}
         </Routes>
@@ -35,11 +36,11 @@ function App() {
           {PublicRoutes.map(({ path, element, key }) => (
             <Route
               key={key}
-              exact
+
               path={path}
               element={<UnAuthorizedWrapper />}
             >
-              <Route key={key + 1} exact path={path} element={element} />
+              <Route key={key + 1} path={path} element={element} />
             </Route>
           ))}
         </Routes>
@@ -47,6 +48,49 @@ function App() {
     }
   }
   return <Router>{renderRoutes()}</Router>;
+
+
+
+  ////////////////////////WORKING
+  return (
+    <Router>
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/card/:id' element={<CardDetail />} />
+        <Route path='/host/landing' element={<HostLanding />} />
+      </Routes>
+    </Router>
+  );
+
+
+  function renderRoutes() {
+    console.log('Token:', token);
+    return (
+      <Routes>
+        {token ? (
+          <>
+            {console.log('Rendering Private Routes')}
+            <Route path='*' element={<Navigate to='/' />} />
+            {PrivateRoutes.map(({ path, element, key }) => (
+              <Route key={key} path={path} element={element} />
+            ))}
+          </>
+        ) : (
+          <>
+            {console.log('Rendering Public Routes')}
+            <Route path='*' element={<Navigate to='/' />} />
+            {PublicRoutes.map(({ path, element, key }) => (
+              <Route key={key} path={path} element={element} />
+            ))}
+          </>
+        )}
+      </Routes>
+    );
+  }
+
+
+  return <Router>{renderRoutes()}</Router>;
+
 }
 
 export default App;
